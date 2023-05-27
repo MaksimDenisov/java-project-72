@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.controllers.UrlController;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
@@ -8,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class App {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
@@ -20,6 +25,13 @@ public class App {
         return 5000;
     }
 
+    private static String getMode() {
+        return System.getenv().getOrDefault("APP_ENV", "development");
+    }
+
+    private static boolean isProduction() {
+        return getMode().equals("production");
+    }
 
     private static TemplateEngine getTemplateEngine() {
         TemplateEngine templateEngine = new TemplateEngine();
@@ -42,16 +54,30 @@ public class App {
 
     public static Javalin getApp() {
         LOGGER.debug("Get Javalin app.");
-        return Javalin.create(config -> {
+        Javalin app = Javalin.create(config -> {
             if (!isProduction()) {
                 config.enableDevLogging();
             }
             config.enableWebjars();
             JavalinThymeleaf.configure(getTemplateEngine());
-        }).get("/", ctx -> ctx.render("index.html"));
+        });//.get("/", ctx -> ctx.render("index.html"));
+        addRoutes(app);
+        return app;
     }
 
-    private static boolean isProduction() {
-        return false;
+    private static void addRoutes(Javalin app) {
+        app.get("/", ctx -> ctx.render("index.html"));
+        app.routes(() -> {
+            path("urls", () -> {
+                post("", UrlController.addUrl);
+                get("", UrlController.getUrls);
+                get("{id}",UrlController.showUrl);
+                /**post("",ArticleController.createArticle);
+                get("{id}/edit",ArticleController.editArticle);
+                post("{id}/edit",ArticleController.updateArticle);
+                get("{id}/delete",ArticleController.deleteArticle);
+                post("{id}/delete",ArticleController.destroyArticle);*/
+            });
+        });
     }
 }

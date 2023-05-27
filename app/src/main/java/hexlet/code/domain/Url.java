@@ -1,25 +1,24 @@
-package hexlet.code;
+package hexlet.code.domain;
 
+import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
-public class Url {
+public final class Url extends Model {
     @Id
     private Long id;
 
     private String name;
 
     @WhenCreated
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    public Url(Long id, String name, LocalDateTime createdAt) {
-        this.id = id;
+    public Url(String name) {
         this.name = name;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -30,7 +29,7 @@ public class Url {
         return name;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 }
