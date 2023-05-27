@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:1.7.36'
 
     implementation 'com.h2database:h2:2.1.210'
+    implementation 'org.postgresql:postgresql:42.6.0'
 
     implementation 'io.ebean:ebean:12.15.1'
     implementation 'io.ebean:ebean-ddl-generator:12.15.1'
