@@ -60,7 +60,7 @@ public class App {
             }
             config.enableWebjars();
             JavalinThymeleaf.configure(getTemplateEngine());
-        });//.get("/", ctx -> ctx.render("index.html"));
+        });
         addRoutes(app);
         return app;
     }
@@ -71,8 +71,8 @@ public class App {
             path("urls", () -> {
                 post("", UrlController.addUrl);
                 get("", UrlController.getUrls);
-                get("{id}",UrlController.showUrl);
-                /**post("",ArticleController.createArticle);
+                get("{id}", UrlController.showUrl);
+                /*post("",ArticleController.createArticle);
                 get("{id}/edit",ArticleController.editArticle);
                 post("{id}/edit",ArticleController.updateArticle);
                 get("{id}/delete",ArticleController.deleteArticle);
