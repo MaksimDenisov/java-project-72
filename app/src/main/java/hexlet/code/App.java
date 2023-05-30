@@ -72,8 +72,8 @@ public class App {
                 post("", UrlController.addUrl);
                 get("", UrlController.getUrls);
                 get("{id}", UrlController.showUrl);
-                /*post("",ArticleController.createArticle);
-                get("{id}/edit",ArticleController.editArticle);
+                post("/{id}/checks", UrlController.addCheck);
+                /*get("{id}/edit",ArticleController.editArticle);
                 post("{id}/edit",ArticleController.updateArticle);
                 get("{id}/delete",ArticleController.deleteArticle);
                 post("{id}/delete",ArticleController.destroyArticle);*/
