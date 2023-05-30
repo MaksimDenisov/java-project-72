@@ -159,11 +159,6 @@ class UrlControllerTest {
     @Test
     @DisplayName("The url check added.")
     void shouldCheckUrl() throws IOException {
-        // 1. Создаём инстанс `MockWebServer`. Вызвав на созданном инстансе метод `mockServer.url("/").toString()` можно получить адрес сайта, который нужно будет использовать в тестах
-        // 2. Создаём инстанс `MockResponse`, и устанавливаем нужное тело ответа. Это и есть та фейковая страница, а точнее её содержимое (html), с которой будет работать наше приложение в тестах
-        // 3. Добавляем инстанс MockResponse в очередь к созданному серверу
-        // 4. Запускаем сервер
-        // 5. После выполнения тестов обязательно нужно остановить сервер. Воспользуйтесь аннотациями `@BeforeAll` и `@BeforeEach` в тестах
         MockWebServer server = new MockWebServer();
         String mockPage = server.url("/").toString();
         MockResponse mockResponse = new MockResponse().setResponseCode(200).setBody("");
