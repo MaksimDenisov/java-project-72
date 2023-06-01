@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UrlControllerTest {
+public class UrlControllerTest {
 
     private static Javalin app;
     private static String baseUrl;
@@ -42,19 +42,19 @@ class UrlControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         database.script().run("/truncate.sql");
         database.script().run("/seed-test-db.sql");
     }
 
     @Test
-    void init() {
+    public void init() {
         assertThat(true).isEqualTo(true);
     }
 
     @Test
     @DisplayName("The title page showed.")
-    void shouldShowIndexPage() {
+    public void shouldShowIndexPage() {
         HttpResponse<String> response = Unirest
                 .get(baseUrl + "/")
                 .asString();
@@ -65,7 +65,7 @@ class UrlControllerTest {
 
     @Test()
     @DisplayName("The required entity added to the database and is displayed on the page")
-    void shouldAddUrl() {
+    public void shouldAddUrl() {
         String name = "https://music.yandex.ru";
         HttpResponse responsePost = Unirest
                 .post(baseUrl + "/urls")
@@ -90,7 +90,7 @@ class UrlControllerTest {
 
     @Test()
     @DisplayName("The exist url not added.")
-    void shouldNotAddExistUrl() {
+    public void shouldNotAddExistUrl() {
         String name = "https://music.yandex.ru";
         new Url(name).save();
         HttpResponse responsePost = Unirest
@@ -110,7 +110,7 @@ class UrlControllerTest {
 
     @Test()
     @DisplayName("The incorrect url not added.")
-    void shouldNotAddIncorrectUrl() {
+    public void shouldNotAddIncorrectUrl() {
         String name = "incorrect url";
         new Url(name).save();
         HttpResponse responsePost = Unirest
@@ -130,7 +130,7 @@ class UrlControllerTest {
 
     @Test
     @DisplayName("The page with list of urls showed.")
-    void shouldShowUrlsPage() {
+    public void shouldShowUrlsPage() {
         HttpResponse<String> response = Unirest
                 .get(baseUrl + "/urls")
                 .asString();
@@ -142,7 +142,7 @@ class UrlControllerTest {
 
     @Test
     @DisplayName("The page with one url showed.")
-    void shouldShowUrlPage() {
+    public void shouldShowUrlPage() {
         String name = "https://ru.hexlet.io";
         Url url = new QUrl()
                 .name.equalTo(name)
@@ -158,7 +158,7 @@ class UrlControllerTest {
 
     @Test
     @DisplayName("The url check added.")
-    void shouldCheckUrl() throws IOException {
+    public void shouldCheckUrl() throws IOException {
         MockWebServer server = new MockWebServer();
         String mockPage = server.url("/").toString();
         MockResponse mockResponse = new MockResponse().setResponseCode(200).setBody("");
@@ -178,9 +178,6 @@ class UrlControllerTest {
                 .asString();
         assertThat(getResponse.getStatus()).isEqualTo(200);
         assertThat(getResponse.getBody()).contains("<td>200</td>");
-
         server.shutdown();
-
-
     }
 }
