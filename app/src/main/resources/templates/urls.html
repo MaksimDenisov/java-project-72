@@ -19,7 +19,7 @@
                 <td>
                     <a th:href="'/urls/' + ${url.id}" th:text="${url.name}"></a>
                 </td>
-                <td th:text="${#temporals.format(url.lastDate , 'dd/MMM/yyyy hh:mm')}"></td>
+                <td th:text="${#temporals.format(url.lastDate , 'dd/MM/yyyy hh:mm')}"></td>
                 <td th:text="${url.lastStatus}"></td>
             </tr>
             </tbody>
