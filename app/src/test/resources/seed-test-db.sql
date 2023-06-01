@@ -1,5 +1,3 @@
-DELETE FROM url;
-
 INSERT INTO url
 (name, created_at)
 VALUES

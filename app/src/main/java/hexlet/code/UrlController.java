@@ -1,21 +1,24 @@
-package hexlet.code.controllers;
+package hexlet.code;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
-import io.ebean.PagedList;
 import io.javalin.http.Handler;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class UrlController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UrlController.class);
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy hh:mm");
 
     public static Handler addUrl = ctx -> {
         String paramUrl = ctx.formParam("url");
@@ -27,6 +30,7 @@ public class UrlController {
                     .name.equalTo(urlEntity.getName())
                     .findOne();
             if (existUrl != null) {
+                LOGGER.info("{} has not been added because this is an exist URL.", paramUrl);
                 ctx.sessionAttribute("flash", "Страница уже существует");
             } else {
                 urlEntity.save();
@@ -37,19 +41,26 @@ public class UrlController {
             LOGGER.info("{} has not been added because this is an incorrect URL.", paramUrl);
             ctx.sessionAttribute("flash", "Некорректный URL");
         }
-        ctx.redirect("/");
+        ctx.redirect("/urls");
     };
 
     public static Handler getUrls = ctx -> {
         LOGGER.info("Get all urls.");
-        //TODO Get all
-        PagedList<Url> pagedArticles = new QUrl()
-                .setFirstRow(0)
-                .setMaxRows(1000)
+        List<Map<String, Object>> urls = new QUrl()
                 .orderBy()
                 .id.asc()
-                .findPagedList();
-        List<Url> urls = pagedArticles.getList();
+                .findList()
+                .stream()
+                .map(url -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", url.getId());
+                    map.put("name", url.getName());
+                    UrlCheck lastCheck = url.getUrlChecks().stream()
+                            .max(Comparator.comparing(UrlCheck::getCreatedAt)).orElse(null);
+                    map.put("lastDate", (lastCheck != null) ? lastCheck.getCreatedAt() : null);
+                    map.put("lastStatus", (lastCheck != null) ? lastCheck.getStatusCode() : "");
+                    return map;
+                }).collect(Collectors.toList());
         ctx.attribute("urls", urls);
         ctx.render("urls.html");
     };
@@ -70,11 +81,8 @@ public class UrlController {
         Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
-        HttpResponse<String> response = Unirest.post(Objects.requireNonNull(url).getName()).asString();
-        UrlCheck check = new UrlCheck();
-        check.setStatusCode(response.getStatus());
+        UrlCheck check = UrlService.checkUrl(url);
         check.setUrl(url);
-        LOGGER.info("{}, status code = {}.", url.getName(), response.getStatus());
         check.save();
         ctx.redirect("/urls/" + url.getId());
     };

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{application.html}">
 <section layout:fragment="content">
+
     <div class="container-lg mt-5" th:object="${url}">
         <h1 th:text= "'Сайт ' + ${url.name}"></h1>
 
@@ -20,9 +21,9 @@
             </tr>
             </tbody>
         </table>
-    </div>
 
-    <h2 class="mt-5">Проверки</h2>
+
+        <h2 class="mt-5">Проверки</h2>
     <form method="post" th:action="'/urls/' + ${url.id} +'/checks'">
         <button type="submit" class="btn btn-primary">Запустить проверку</button>
     </form>
@@ -48,5 +49,6 @@
         </tr>
         </tbody>
     </table>
+    </div>
 </section>
 </html>

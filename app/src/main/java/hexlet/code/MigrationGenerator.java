@@ -7,7 +7,6 @@ import java.io.IOException;
 
 public final class MigrationGenerator {
 
-
     public static void main(String[] args) throws IOException {
         DbMigration dbMigration = DbMigration.create();
         dbMigration.addPlatform(Platform.POSTGRES, "postgres");

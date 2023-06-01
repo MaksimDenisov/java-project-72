@@ -72,10 +72,10 @@ class UrlControllerTest {
                 .field("url", name)
                 .asEmpty();
         assertThat(responsePost.getStatus()).isEqualTo(302);
-        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/");
+        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
 
         HttpResponse<String> response = Unirest
-                .get(baseUrl + "/")
+                .get(baseUrl + "/urls")
                 .asString();
         String body = response.getBody();
         assertThat(response.getStatus()).isEqualTo(200);
@@ -98,10 +98,10 @@ class UrlControllerTest {
                 .field("url", name)
                 .asEmpty();
         assertThat(responsePost.getStatus()).isEqualTo(302);
-        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/");
+        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
 
         HttpResponse<String> response = Unirest
-                .get(baseUrl + "/")
+                .get(baseUrl + "/urls")
                 .asString();
         String body = response.getBody();
         assertThat(response.getStatus()).isEqualTo(200);
@@ -118,10 +118,10 @@ class UrlControllerTest {
                 .field("url", name)
                 .asEmpty();
         assertThat(responsePost.getStatus()).isEqualTo(302);
-        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/");
+        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
 
         HttpResponse<String> response = Unirest
-                .get(baseUrl + "/")
+                .get(baseUrl + "/urls")
                 .asString();
         String body = response.getBody();
         assertThat(response.getStatus()).isEqualTo(200);

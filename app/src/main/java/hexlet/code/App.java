@@ -1,6 +1,5 @@
 package hexlet.code;
 
-import hexlet.code.controllers.UrlController;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
@@ -73,10 +72,6 @@ public class App {
                 get("", UrlController.getUrls);
                 get("{id}", UrlController.showUrl);
                 post("/{id}/checks", UrlController.addCheck);
-                /*get("{id}/edit",ArticleController.editArticle);
-                post("{id}/edit",ArticleController.updateArticle);
-                get("{id}/delete",ArticleController.deleteArticle);
-                post("{id}/delete",ArticleController.destroyArticle);*/
             });
         });
     }
