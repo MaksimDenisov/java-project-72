@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class UrlController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UrlController.class);
-    public static Handler index = ctx ->{
+    public static Handler index = ctx -> {
         ctx.render("index.html");
     };
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy hh:mm");
