@@ -1,7 +1,7 @@
 package hexlet.code;
 
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import io.javalin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,20 +52,25 @@ public class App {
     }
 
     public static Javalin getApp() {
-        LOGGER.debug("Get Javalin app.");
         Javalin app = Javalin.create(config -> {
             if (!isProduction()) {
-                config.enableDevLogging();
+                config.plugins.enableDevLogging();
             }
-            config.enableWebjars();
-            JavalinThymeleaf.configure(getTemplateEngine());
+
+            JavalinThymeleaf.init(getTemplateEngine());
         });
+
         addRoutes(app);
+
+        app.before(ctx -> {
+            ctx.attribute("ctx", ctx);
+        });
+
         return app;
     }
 
     private static void addRoutes(Javalin app) {
-        app.get("/", ctx -> ctx.render("index.html"));
+        app.get("/", UrlController.index);
         app.routes(() -> {
             path("urls", () -> {
                 post("", UrlController.addUrl);
