@@ -88,6 +88,7 @@ public class UrlController {
         UrlCheck check = UrlService.checkUrl(url);
         check.setUrl(url);
         check.save();
+        ctx.sessionAttribute("flash", "Страница успешно проверена");
         ctx.redirect("/urls/" + url.getId());
     };
 }
