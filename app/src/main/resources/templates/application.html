@@ -26,8 +26,11 @@
     </div>
 </nav>
 <main class="flex-grow-1">
-    <div th:if="${session.flash}" class="alert alert-info" role="alert" th:text="${session.flash}"></div>
-    <div th:if="${session.flash}" th:text="${#session.removeAttribute('flash')}"></div>
+    <div th:if="${session.flash}"
+         class="alert alert-info"
+         role="alert"
+         th:text="${ctx.consumeSessionAttribute('flash')}">
+    </div>
     <section layout:fragment="content"></section>
 </main>
 </body>
