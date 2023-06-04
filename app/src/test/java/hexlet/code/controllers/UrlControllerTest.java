@@ -42,7 +42,7 @@ public class UrlControllerTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public final void setUp() {
         database.script().run("/truncate.sql");
         database.script().run("/seed-test-db.sql");
     }
