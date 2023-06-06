@@ -56,16 +56,12 @@ public class App {
             if (!isProduction()) {
                 config.plugins.enableDevLogging();
             }
-
             JavalinThymeleaf.init(getTemplateEngine());
         });
-
         addRoutes(app);
-
         app.before(ctx -> {
             ctx.attribute("ctx", ctx);
         });
-
         return app;
     }
 

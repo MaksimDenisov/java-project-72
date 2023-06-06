@@ -2,18 +2,73 @@ package hexlet.code;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
+import hexlet.code.domain.query.QUrl;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UrlService {
+    public static List<Map<String, Object>> getAll() {
+        return new QUrl()
+                .orderBy()
+                .id.asc()
+                .findList()
+                .stream()
+                .map(url -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", url.getId());
+                    map.put("name", url.getName());
+                    UrlCheck lastCheck = url.getUrlChecks().stream()
+                            .max(Comparator.comparing(UrlCheck::getCreatedAt)).orElse(null);
+                    map.put("lastDate", (lastCheck != null) ? lastCheck.getCreatedAt() : null);
+                    map.put("lastStatus", (lastCheck != null) ? lastCheck.getStatusCode() : "");
+                    return map;
+                }).collect(Collectors.toList());
+    }
 
-    public static UrlCheck checkUrl(Url url) {
+    public static Url getUrlById(long id) {
+        return new QUrl()
+                .id.equalTo(id)
+                .findOne();
+    }
+
+    public static boolean addUrl(String paramUrl) throws MalformedURLException {
+        URL url = new URL(Objects.requireNonNull(paramUrl));
+        String port = ((url.getPort() != -1) ? (":" + url.getPort()) : "");
+        Url urlEntity = new Url(String.format("%s://%s%s", url.getProtocol(), url.getHost(), port));
+        Url existUrl = new QUrl()
+                .name.equalTo(urlEntity.getName())
+                .findOne();
+        if (existUrl != null) {
+            return false;
+        }
+        urlEntity.save();
+        return true;
+    }
+
+    public static Url checkUrlById(long id) {
+        Url url = new QUrl()
+                .id.equalTo(id)
+                .findOne();
+        UrlCheck check = UrlService.checkUrl(url);
+        check.setUrl(url);
+        check.save();
+        return url;
+    }
+
+    private static UrlCheck checkUrl(Url url) {
         HttpResponse<String> response = Unirest.post(Objects.requireNonNull(url).getName()).asString();
         int statusCode = response.getStatus();
         Document document = Jsoup.parse(response.getBody());

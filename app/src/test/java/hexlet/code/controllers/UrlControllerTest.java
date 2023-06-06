@@ -48,11 +48,6 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void init() {
-        assertThat(true).isEqualTo(true);
-    }
-
-    @Test
     @DisplayName("The title page showed.")
     public void shouldShowIndexPage() {
         HttpResponse<String> response = Unirest
