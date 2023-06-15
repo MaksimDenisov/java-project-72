@@ -56,6 +56,7 @@ public class App {
             if (!isProduction()) {
                 config.plugins.enableDevLogging();
             }
+            config.staticFiles.enableWebjars();
             JavalinThymeleaf.init(getTemplateEngine());
         });
         addRoutes(app);
