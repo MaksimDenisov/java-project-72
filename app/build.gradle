@@ -16,9 +16,11 @@ repositories {
 
 compileJava {
     options.release = 17
+    options.encoding = "UTF-8"
     options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
 }
 
+compileTestJava.options.encoding = "UTF-8"
 
 dependencies {
     implementation 'io.javalin:javalin:5.5.0'
