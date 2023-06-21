@@ -1,5 +1,6 @@
-package hexlet.code;
+package hexlet.code.controllers;
 
+import hexlet.code.services.UrlService;
 import hexlet.code.domain.Url;
 import io.javalin.http.Handler;
 import org.slf4j.Logger;
@@ -10,9 +11,6 @@ import java.util.Map;
 
 public class UrlController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UrlController.class);
-    public static Handler index = ctx -> {
-        ctx.render("index.html");
-    };
 
     public static Handler addUrl = ctx -> {
         String paramUrl = ctx.formParam("url");
@@ -32,9 +30,17 @@ public class UrlController {
     };
 
     public static Handler getUrls = ctx -> {
-        LOGGER.info("Get all urls.");
-        List<Map<String, Object>> urls = UrlService.getAll();
+        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        LOGGER.info("Get urls page {}.", page);
+        int pageCount = UrlService.getPageCount();
+        if (page < 1 || page > pageCount) {
+            ctx.redirect("/urls");
+            return;
+        }
+        List<Map<String, Object>> urls = UrlService.getPage(page);
+        ctx.attribute("currentPage", page);
         ctx.attribute("urls", urls);
+        ctx.attribute("pageCount", pageCount);
         ctx.render("urls.html");
     };
 

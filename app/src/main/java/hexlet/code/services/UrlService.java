@@ -1,4 +1,4 @@
-package hexlet.code;
+package hexlet.code.services;
 
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
@@ -20,8 +20,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UrlService {
-    public static List<Map<String, Object>> getAll() {
+    private static final int PAGE_SIZE = 10;
+
+    public static List<Map<String, Object>> getPage(int page) {
         return new QUrl()
+                .setFirstRow(--page * PAGE_SIZE)
+                .setMaxRows(PAGE_SIZE)
                 .orderBy()
                 .id.asc()
                 .findList()
@@ -36,6 +40,9 @@ public class UrlService {
                     map.put("lastStatus", (lastCheck != null) ? lastCheck.getStatusCode() : "");
                     return map;
                 }).collect(Collectors.toList());
+    }
+    public static int getPageCount() {
+        return new QUrl().findCount() / 10 + 1;
     }
 
     public static Url getUrlById(long id) {
@@ -69,7 +76,7 @@ public class UrlService {
     }
 
     private static UrlCheck checkUrl(Url url) {
-        HttpResponse<String> response = Unirest.post(Objects.requireNonNull(url).getName()).asString();
+        HttpResponse<String> response = Unirest.get(Objects.requireNonNull(url).getName()).asString();
         int statusCode = response.getStatus();
         Document document = Jsoup.parse(response.getBody());
         String title = document.title();
@@ -79,4 +86,6 @@ public class UrlService {
                 .map(element -> element.attr("content")).orElse("");
         return new UrlCheck(statusCode, title, h1, description);
     }
+
+
 }

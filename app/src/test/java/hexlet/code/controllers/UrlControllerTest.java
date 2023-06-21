@@ -17,6 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -156,12 +158,14 @@ public class UrlControllerTest {
     public void shouldCheckUrl() throws IOException {
         MockWebServer server = new MockWebServer();
         String mockPage = server.url("/").toString();
-        MockResponse mockResponse = new MockResponse().setResponseCode(200).setBody("");
+        String body = Files.readString(Paths.get("src/test/resources/fixtures", "page.html"));
+        MockResponse mockResponse = new MockResponse().setResponseCode(200).setBody(body);
         server.enqueue(mockResponse);
         new Url(mockPage).save();
         Url url = new QUrl()
                 .name.equalTo(mockPage)
                 .findOne();
+
         HttpResponse<String> postResponse = Unirest
                 .post(baseUrl + "/urls/" + url.getId() + "/checks")
                 .asString();
@@ -172,6 +176,9 @@ public class UrlControllerTest {
                 .get(baseUrl + "/urls/" + url.getId())
                 .asString();
         assertThat(getResponse.getStatus()).isEqualTo(200);
+        assertThat(getResponse.getBody()).contains("Title");
+        assertThat(getResponse.getBody()).contains("Description");
+        assertThat(getResponse.getBody()).contains("Header 1");
         assertThat(getResponse.getBody()).contains("<td>200</td>");
         server.shutdown();
     }
