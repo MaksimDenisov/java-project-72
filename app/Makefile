@@ -5,7 +5,7 @@ build:
 install:
 	./gradlew install
 run-dist:
-	./build/install/app/bin/app
+	APP_ENV=development ./build/install/app/bin/app
 report:
 	./gradlew jacocoTestReport
 

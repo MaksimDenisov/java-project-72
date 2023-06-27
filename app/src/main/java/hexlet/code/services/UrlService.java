@@ -86,6 +86,4 @@ public class UrlService {
                 .map(element -> element.attr("content")).orElse("");
         return new UrlCheck(statusCode, title, h1, description);
     }
-
-
 }

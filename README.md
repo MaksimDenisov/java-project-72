@@ -8,3 +8,18 @@
 
 [https://java-project-72-production-a79f.up.railway.app/](https://java-project-72-production-2919.up.railway.app/)
 
+### Site that analyzes said pages for SEO suitability.
+
+## Setup
+
+```bash
+make install
+```
+
+## Run server
+
+```bash
+make run-dist
+# Open http://localhost:5000
+```
+
