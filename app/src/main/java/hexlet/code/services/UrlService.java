@@ -41,6 +41,7 @@ public class UrlService {
                     return map;
                 }).collect(Collectors.toList());
     }
+
     public static int getPageCount() {
         return new QUrl().findCount() / 10 + 1;
     }
@@ -69,9 +70,11 @@ public class UrlService {
         Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
-        UrlCheck check = UrlService.checkUrl(url);
-        check.setUrl(url);
-        check.save();
+        if (url != null) {
+            UrlCheck check = UrlService.checkUrl(url);
+            check.setUrl(url);
+            check.save();
+        }
         return url;
     }
 

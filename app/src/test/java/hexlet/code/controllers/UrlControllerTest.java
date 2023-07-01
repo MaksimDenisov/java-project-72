@@ -172,6 +172,12 @@ public class UrlControllerTest {
 
         assertThat(postResponse.getStatus()).isEqualTo(302);
 
+        Url actualUrl = new QUrl()
+                .name.equalTo(mockPage)
+                .findOne();
+
+        assertThat(actualUrl.getUrlChecks().size()).isEqualTo(1);
+
         HttpResponse<String> getResponse = Unirest
                 .get(baseUrl + "/urls/" + url.getId())
                 .asString();

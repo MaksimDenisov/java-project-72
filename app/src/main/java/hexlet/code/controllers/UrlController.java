@@ -56,7 +56,12 @@ public class UrlController {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
         LOGGER.info("Start check url with id {}.", id);
         Url url = UrlService.checkUrlById(id);
-        ctx.sessionAttribute("flash", "Страница успешно проверена");
-        ctx.redirect("/urls/" + url.getId());
+        if (url != null) {
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.redirect("/urls/" + url.getId());
+        } else {
+            ctx.sessionAttribute("flash", "Некорректный URL");
+            ctx.redirect("/urls/");
+        }
     };
 }
