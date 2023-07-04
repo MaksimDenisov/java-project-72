@@ -70,16 +70,18 @@ public class UrlService {
         Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
-        if (url != null) {
-            UrlCheck check = UrlService.checkUrl(url);
-            check.setUrl(url);
-            check.save();
+        if (url == null) {
+            throw new IllegalArgumentException("Can't found entity with id = " + id);
         }
+        UrlCheck check = UrlService.checkUrl(url);
+        check.setUrl(url);
+        check.save();
         return url;
     }
 
     private static UrlCheck checkUrl(Url url) {
-        HttpResponse<String> response = Unirest.get(Objects.requireNonNull(url).getName()).asString();
+        HttpResponse<String> response;
+        response = Unirest.get(Objects.requireNonNull(url).getName()).asString();
         int statusCode = response.getStatus();
         Document document = Jsoup.parse(response.getBody());
         String title = document.title();
