@@ -1,8 +1,9 @@
 package hexlet.code.controllers;
 
-import hexlet.code.services.UrlService;
 import hexlet.code.domain.Url;
+import hexlet.code.services.UrlService;
 import io.javalin.http.Handler;
+import kong.unirest.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class UrlController {
             }
         } catch (Exception e) {
             LOGGER.info("{} has not been added because this is an incorrect URL.", paramUrl);
+            ctx.sessionAttribute("isError", true);
             ctx.sessionAttribute("flash", "Некорректный URL");
         }
         ctx.redirect("/urls");
@@ -56,12 +58,15 @@ public class UrlController {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
         LOGGER.info("Start check url with id {}.", id);
         try {
-            Url url = UrlService.checkUrlById(id);
+            UrlService.checkUrlById(id);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
-            ctx.redirect("/urls/" + url.getId());
-        } catch (Exception e) {
+        } catch (UnirestException e) {
+            ctx.sessionAttribute("isError", true);
             ctx.sessionAttribute("flash", "Некорректный URL");
-            ctx.redirect("/urls/");
+        } catch (Exception e) {
+            ctx.sessionAttribute("isError", true);
+            ctx.sessionAttribute("flash", "Неизвестная ошибка");
         }
+        ctx.redirect("/urls/" + id);
     };
 }
