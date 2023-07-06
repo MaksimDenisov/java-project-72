@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/2c97e05d7b9a965d159d/test_coverage)](https://codeclimate.com/github/MaksimDenisov/java-project-72/test_coverage)
 
 
-[https://java-project-72-production-a79f.up.railway.app/](https://java-project-72-production-2919.up.railway.app/)
+[Site Analyzer](https://siteanalizer.onrender.com/)
 
 ### Site that analyzes said pages for SEO suitability.
 
