@@ -29,7 +29,7 @@
     <div th:if="${session.flash}"
          role = "alert"
          th:text="${ctx.consumeSessionAttribute('flash')}"
-         th:class="'alert ' +${ctx.consumeSessionAttribute('isError') ? 'alert-danger' : 'alert-info'}">
+         th:class="'alert alert-' +${ctx.consumeSessionAttribute('flash-type')}">
     </div>
     <section layout:fragment="content"></section>
 </main>

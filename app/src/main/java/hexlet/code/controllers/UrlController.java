@@ -18,14 +18,16 @@ public class UrlController {
         try {
             if (UrlService.addUrl(paramUrl)) {
                 LOGGER.info("{} added", paramUrl);
+                ctx.sessionAttribute("flash-type", "info");
                 ctx.sessionAttribute("flash", "Страница успешно добавлена");
             } else {
                 LOGGER.info("{} has not been added because this is an exist URL.", paramUrl);
+                ctx.sessionAttribute("flash-type", "danger");
                 ctx.sessionAttribute("flash", "Страница уже существует");
             }
         } catch (Exception e) {
             LOGGER.info("{} has not been added because this is an incorrect URL.", paramUrl);
-            ctx.sessionAttribute("isError", true);
+            ctx.sessionAttribute("flash-type", "danger");
             ctx.sessionAttribute("flash", "Некорректный URL");
         }
         ctx.redirect("/urls");
@@ -59,12 +61,13 @@ public class UrlController {
         LOGGER.info("Start check url with id {}.", id);
         try {
             UrlService.checkUrlById(id);
+            ctx.sessionAttribute("flash-type", "info");
             ctx.sessionAttribute("flash", "Страница успешно проверена");
         } catch (UnirestException e) {
-            ctx.sessionAttribute("isError", true);
+            ctx.sessionAttribute("flash-type", "danger");
             ctx.sessionAttribute("flash", "Некорректный URL");
         } catch (Exception e) {
-            ctx.sessionAttribute("isError", true);
+            ctx.sessionAttribute("flash-type", "danger");
             ctx.sessionAttribute("flash", "Неизвестная ошибка");
         }
         ctx.redirect("/urls/" + id);
